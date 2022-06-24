@@ -46,20 +46,20 @@ public class Node {
  
 	public Node(String data) {
 		this.data = data;
-		this.left = null;
-		this.right = null;
+		left = null;
+		right = null;
 	}
  
 	public Node (String data, Node l, Node r) {
 		this.data = data;
-		this.left.data = l;
-		this.right.data = r;
+		left = l;
+		right = r;
 	
 	}
 
-	static String toString() {
+	public String toString() {
 		
-		result = null;
+		String result = null;
 		
 		if (this.left == null && this.right == null) {
 			result = this.data;
@@ -71,7 +71,13 @@ public class Node {
 	}
 	
 	
+	public static void main(String[] args) {
+    
+    }
+	
 }
+
+
 
 /*
 	Part 2: Evaluate Tree Class
