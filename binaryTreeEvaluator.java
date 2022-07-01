@@ -38,45 +38,76 @@
 	end function
 */
  
+
+// Node Definition:
 public class Node {
- 
-	public String data;
-	private Node left;
-	private Node right;
- 
-	public Node(String data) {
-		this.data = data;
-		left = null;
-		right = null;
-	}
- 
-	public Node (String data, Node l, Node r) {
-		this.data = data;
-		left = l;
-		right = r;
-	
-	}
 
-	public String toString() {
-		
-		String result = null;
-		
-		if (this.left == null && this.right == null) {
-			result = this.data;
-		} else {
-			result = "(" + left.toString() + this.data + " " + right.toString() + ")";
-		}
-		
-		return result;
-	}
-	
-	
-	public static void main(String[] args) {
-    
+    String data;
+    Node left;
+    Node right;
+
+    public Node() {
+        this.data = "null";
+        this.left = null;
+        this.right = null;
     }
-	
-}
 
+    public Node(String data) {
+        this.data = data;
+        this.left = null;
+        this.right = null;
+    }
+
+    public Node (String data, Node l, Node r) {
+        this.data = data;
+        this.left = l;
+        this.right = r;
+
+    }
+
+    public String toString() {      // concatenates leaf nodes with operator parent nodes to make an expression
+
+        String result = null;
+
+        if (this.left == null && this.right == null) {   //checks if parent or leaf node
+            result = this.data; //leaf
+        } else {
+            result = "( " + this.left.toString() +" " + this.data + " " + this.right.toString() + ") "; //group leaves together into expression
+        }
+        return result;
+    }
+
+    public Double evaluate() {   // switch statement works similar to toString,
+                                    //however preforms the matching operation of the parent node
+        double num = 0;
+
+        switch (this.data) {
+            case "+":
+                num = left.evaluate() + right.evaluate();
+                break;
+            case "-":
+                num = left.evaluate() - right.evaluate();
+                break;
+            case "*":
+                num = left.evaluate() * right.evaluate();
+                break;
+            case "/":
+                num = left.evaluate() / right.evaluate();
+                break;
+            case "%":
+                num =  left.evaluate() % right.evaluate();
+                break;
+            case "^":
+                num =  Math.pow(left.evaluate(),right.evaluate());
+                break;
+            default:
+                num = Double.parseDouble(this.data); // if not an operator, strings are converted to float to perform arithmatic
+        }
+        return num;
+    }
+
+
+}
 
 
 /*
@@ -85,3 +116,113 @@ public class Node {
 	While all the major logic will be found in the nodes, we need to have a single, centralized class. The purpose of the
 	EvaluateTree class is to start recursion, store some global attributes (for future versions), and much more.
 */
+
+public class EvaluateTree extends Node{   // This class should act as an interface for the user to the Node
+
+    public Node root;
+
+    public EvaluateTree() {
+        root = new Node();
+    }
+
+    public EvaluateTree(Node x) {
+        root.data = x.data;
+        root.left = x.left;
+        root.right = x.right;
+    }
+
+    public String toString() {
+
+        String result = null;
+
+        if (root.left == null && root.right == null) {
+            result = root.data;
+        } else {
+            result = "( " + root.left.toString() +" " + root.data + " " + root.right.toString() + ") ";
+        }
+
+        return result;
+
+    }
+
+    public String about() {
+        return " This program was written by Joshua Benjamin for Devin Cook's Data Structures" + "\n"
+                + " and Algorithms Summer 2022 class.";
+    }
+
+    public Double evaluate() {
+
+        double num = 0;
+
+        switch (root.data) {
+            case "+":
+                num = root.left.evaluate() + root.right.evaluate();
+                break;
+            case "-":
+                num = root.left.evaluate() - root.right.evaluate();
+                break;
+            case "*":
+                num = root.left.evaluate() * root.right.evaluate();
+                break;
+            case "/":
+                num = root.left.evaluate() / root.right.evaluate();
+                break;
+            case "%":
+                num =  root.left.evaluate() % root.right.evaluate();
+                break;
+            case "^":
+                num =  Math.pow(root.left.evaluate(),root.right.evaluate());
+                break;
+            default:
+                num = Double.parseDouble(root.data);
+        }
+        return num;
+    }
+
+}
+
+class MathExpressionMaker {
+
+
+    public static void main(String[] args) {
+
+        //Test 1
+        EvaluateTree tree = new EvaluateTree();
+        tree.root = new Node("+", new Node("5"), new Node("/", new Node("7"), new Node("2")));
+        System.out.println(tree.toString());
+        System.out.println(tree.evaluate());
+
+        //Test 2
+        EvaluateTree tree2 = new EvaluateTree();
+        tree2.root =  new Node("+",new Node("*", new Node("5"),new Node("26")),new Node("/",new Node("-",new Node("20"),new Node("12")),new Node("2")));
+        System.out.println(tree2.toString());
+        System.out.println(tree2.evaluate());
+
+        //Test 3
+        EvaluateTree tree3 = new EvaluateTree();
+        tree3.root =  new Node("^",new Node("5"),new Node("2"));
+        System.out.println(tree3.toString());
+        System.out.println(tree3.evaluate());
+
+        //Test 4
+        EvaluateTree tree4 = new EvaluateTree();
+        tree4.root =  new Node("%",new Node("8"),new Node("3"));
+        System.out.println(tree4);
+        System.out.println(tree4.evaluate());
+
+        /*Test Template
+         EvaluateTree tree = new EvaluateTree();
+         tree2.root =  new Node();
+         System.out.println(tree.toString());
+         System.out.println(tree.evaluate());
+        */
+
+
+
+
+
+
+        // End
+        System.out.println(tree.about());
+    }
+}
